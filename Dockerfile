@@ -1,12 +1,31 @@
 FROM node:18-alpine
 
+# Set working directory
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install --only=production
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodeuser -u 1001
 
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy source code
 COPY . .
 
+# Change ownership to non-root user
+RUN chown -R nodeuser:nodejs /app
+USER nodeuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node healthcheck.js
+
+# Expose port
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Start application
+CMD ["node", "app.js"]
