@@ -7,7 +7,7 @@ pipeline {
         DOCKER_CREDS = 'docker-hub' 
         
         // --- KONFIGURASI GIT (REPO MANIFEST) ---
-        GIT_CREDS    = 'git-token'
+        GIT_CREDS    = 'github-pat-aria'
         MANIFEST_REPO_URL = 'github.com/DevopsNaratel/deployment-manifests' 
         
         // --- PATH FILE MANIFEST ---
